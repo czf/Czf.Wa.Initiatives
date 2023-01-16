@@ -7,5 +7,5 @@ public interface IInitiativeClient
     public Task<List<InitiativeHeader>> GetInitiativeToThePeopleHeaders();
     public Task<List<InitiativeHeader>> GetInitiativeToTheLegislatureHeaders();
 
-
+    public Task<Initiative?> GetInitiative(InitiativeHeader initiativeHeader);
 }
