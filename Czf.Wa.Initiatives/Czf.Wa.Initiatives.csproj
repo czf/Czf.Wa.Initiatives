@@ -10,11 +10,11 @@
     <PackageProjectUrl>https://github.com/czf/Czf.Wa.Initiatives</PackageProjectUrl>
     <RepositoryUrl>https://github.com/czf/Czf.Wa.Initiatives</RepositoryUrl>
     <PackageTags>washington</PackageTags>
-    <PackageReleaseNotes>initial implementation doesn't parse additional sponsors </PackageReleaseNotes>
+    <PackageReleaseNotes>missed assigned number for initiative object, better date parsing to convert to pacific time </PackageReleaseNotes>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
-    <Version>$(VersionPrefix)0.1</Version>
+    <Version>$(VersionPrefix)0.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

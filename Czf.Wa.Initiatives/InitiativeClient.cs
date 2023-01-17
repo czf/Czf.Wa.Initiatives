@@ -2,6 +2,7 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -74,7 +75,7 @@ public class InitiativeClient : IInitiativeClient
 
                 var contactInfo = ParseContactInfo(rowData);
                 var summaryCell = ParseSummaryCell(rowData);
-                result = new Initiative(initiativeHeader.id, initiativeHeader.dateFiled, initiativeHeader.fallbackDate, initiativeHeader.primarySponsor, initiativeHeader.subject,
+                result = new Initiative(initiativeHeader.id, initiativeHeader.dateFiled, initiativeHeader.fallbackDate, initiativeHeader.assignedNumber, initiativeHeader.primarySponsor, initiativeHeader.subject,
                     contactInfo, summaryCell.BallotTitle, summaryCell.Summary, summaryCell.BallotTitleLetter, summaryCell.CompleteText, summaryCell.FullText);
 
             }
@@ -172,7 +173,7 @@ public class InitiativeClient : IInitiativeClient
     private async Task<List<InitiativeHeader>> GetInitiativeHeaders(string initiativeType)
     {
         List<InitiativeHeader> result = new();
-
+        var pacificStandardTime = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         var currentYear = Now != DateTimeOffset.MinValue ? Now.Year :
             DateTimeOffset.UtcNow.ToOffset(_pacifictTimeZone.GetUtcOffset(DateTime.Now)).Year;
@@ -194,9 +195,13 @@ public class InitiativeClient : IInitiativeClient
                         bool flag = row.GetAttributeValue<bool>("flag", false);
                         var headerNodes = row.ChildNodes;
                         string fallbackDate = string.Empty;
-                        if (!DateTimeOffset.TryParse(headerNodes[0].InnerText, out DateTimeOffset dateFiled))
+                        if (!DateTimeOffset.TryParse(headerNodes[0].InnerText, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset dateFiled))
                         {
                             fallbackDate = headerNodes[0].InnerText;
+                        }
+                        else
+                        {
+                            dateFiled = new DateTimeOffset(dateFiled.DateTime, pacificStandardTime.GetUtcOffset(dateFiled.DateTime));
                         }
 
                         int.TryParse(headerNodes[1].InnerText, out int assignedNumber);
